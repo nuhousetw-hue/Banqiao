@@ -242,7 +242,7 @@ async function loadData() {
     const json = await res.json();
     allData = json.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
     document.getElementById('loading').style.display = 'none';
-    document.getElementById('cards').style.display = '';
+    document.getElementById('cards').style.display = 'block';
     document.getElementById('last-update').textContent = new Date().toLocaleString('zh-TW');
     filterCards();
   } catch (e) {
