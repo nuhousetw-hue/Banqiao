@@ -60,7 +60,6 @@
       color: #c00;
     }
 
-    /* Cards */
     #cards {
       display: none;
       padding: 16px;
@@ -85,15 +84,8 @@
       gap: 12px;
       flex-wrap: wrap;
     }
-    .card-name {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-    .card-date {
-      font-size: 13px;
-      color: #aaa;
-    }
+    .card-name { font-size: 22px; font-weight: 700; letter-spacing: 0.05em; }
+    .card-date { font-size: 13px; color: #aaa; }
     .card-body {
       padding: 14px 18px;
       display: grid;
@@ -101,17 +93,8 @@
       gap: 10px 20px;
     }
     .field { display: flex; flex-direction: column; gap: 2px; }
-    .field-label {
-      font-size: 12px;
-      color: #999;
-      letter-spacing: 0.05em;
-    }
-    .field-value {
-      font-size: 18px;
-      color: #111;
-      font-weight: 500;
-      line-height: 1.4;
-    }
+    .field-label { font-size: 12px; color: #999; letter-spacing: 0.05em; }
+    .field-value { font-size: 18px; color: #111; font-weight: 500; line-height: 1.4; }
     .field-value.phone { color: #0055cc; }
     .field-value.budget { color: #b85c00; font-weight: 700; }
     .field-value.first-yes { color: #1a7a1a; font-weight: 700; }
@@ -122,16 +105,10 @@
       border-top: 1px solid #eee;
       padding: 10px 18px;
       display: flex;
-      gap: 16px;
+      gap: 10px;
       flex-wrap: wrap;
     }
-    .badge {
-      font-size: 14px;
-      background: #f0f0f0;
-      border-radius: 20px;
-      padding: 4px 14px;
-      color: #444;
-    }
+    .badge { font-size: 14px; background: #f0f0f0; border-radius: 20px; padding: 4px 14px; color: #444; }
     .badge.purpose { background: #e8f0ff; color: #1a3a8a; }
     .badge.project { background: #fff3e0; color: #7a3a00; }
   </style>
@@ -152,11 +129,63 @@
 </div>
 
 <div id="loading">資料載入中…</div>
-<div id="error-msg">⚠ 資料載入失敗，請確認 data.json 是否存在。</div>
+<div id="error-msg">⚠ 資料載入失敗，請稍後再試。</div>
 <div id="cards"></div>
 
 <script>
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSb7uMvcrJNTtDAdwhMFylZK07yr2pSP3qH9zC7Rou9yHLOf9sGz6-O0bkb5p5PULlG_eC8gPubVk_M/pub?output=csv';
+
 let allData = [];
+
+// 解析 CSV（處理欄位內含逗號、換行的情況）
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = '', inQuote = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuote) {
+      if (c === '"' && text[i+1] === '"') { field += '"'; i++; }
+      else if (c === '"') inQuote = false;
+      else field += c;
+    } else {
+      if (c === '"') inQuote = true;
+      else if (c === ',') { row.push(field); field = ''; }
+      else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else if (c !== '\r') field += c;
+    }
+  }
+  if (field || row.length) { row.push(field); rows.push(row); }
+  return rows;
+}
+
+function csvToObjects(rows) {
+  if (rows.length < 2) return [];
+  const headers = rows[0];
+  return rows.slice(1).map(r => {
+    const obj = {};
+    headers.forEach((h, i) => obj[h.trim()] = (r[i] || '').trim());
+    return obj;
+  });
+}
+
+function mapRow(obj) {
+  return {
+    date:               obj['填答時間'] || '',
+    name:               obj['貴賓姓名'] || '',
+    age:                obj['請問您的年齡:'] || obj['請問您的年齡'] || '',
+    city:               obj['請問您居住的縣市'] || '',
+    taipei_district:    obj['台北市哪一區?'] || obj['台北市哪一區'] || '',
+    newtaipei_district: obj['新北市哪一區?'] || obj['新北市哪一區'] || '',
+    occupation:         obj['請問您的職業'] || '',
+    phone:              obj['聯繫電話'] || '',
+    line_id:            obj['LINE ID'] || '',
+    project:            obj['預約賞屋建案'] || '',
+    housing_type:       obj['想要看的房型'] || '',
+    budget:             obj['購屋的預算範圍'] || '',
+    first_buyer:        obj['是否為首次購屋'] || '',
+    purpose:            obj['本次購屋的用途'] || '',
+  };
+}
 
 function val(v, cls) {
   if (!v) return `<span class="field-value empty">—</span>`;
@@ -171,7 +200,6 @@ function district(r) {
 
 function renderCard(r) {
   const isFirst = r.first_buyer === '是';
-  const loc = district(r);
   return `
   <div class="card">
     <div class="card-header">
@@ -193,7 +221,7 @@ function renderCard(r) {
       </div>
       <div class="field">
         <span class="field-label">居住地區</span>
-        ${val(loc)}
+        ${val(district(r))}
       </div>
       <div class="field">
         <span class="field-label">職業</span>
@@ -237,10 +265,15 @@ function filterCards() {
 
 async function loadData() {
   try {
-    const res = await fetch('data.json?t=' + Date.now());
+    const res = await fetch(SHEET_URL + '&t=' + Date.now());
     if (!res.ok) throw new Error('fetch failed');
-    const json = await res.json();
-    allData = json.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    const text = await res.text();
+    const rows = parseCSV(text);
+    const objs = csvToObjects(rows);
+    allData = objs.map(mapRow)
+      .filter(r => r.name)
+      .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
     document.getElementById('loading').style.display = 'none';
     document.getElementById('cards').style.display = 'block';
     document.getElementById('last-update').textContent = new Date().toLocaleString('zh-TW');
