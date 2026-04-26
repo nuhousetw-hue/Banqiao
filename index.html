@@ -27,6 +27,28 @@
     #meta { font-size: 13px; color: #aaa; text-align: right; line-height: 1.8; }
     #meta span { color: #f0c060; }
 
+    /* Tabs */
+    .tabs {
+      background: #2c2c2c;
+      display: flex;
+      gap: 0;
+    }
+    .tab-btn {
+      padding: 14px 36px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #aaa;
+      background: none;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-btn.active { color: #f0c060; border-bottom-color: #f0c060; }
+    .tab-btn:hover { color: #fff; }
+
+    /* Toolbar */
     .toolbar {
       background: #fff;
       padding: 12px 20px;
@@ -46,27 +68,11 @@
     }
     #total-count { font-size: 15px; color: #555; white-space: nowrap; }
 
-    #loading {
-      text-align: center;
-      padding: 80px;
-      font-size: 20px;
-      color: #888;
-    }
-    #error-msg {
-      display: none;
-      text-align: center;
-      padding: 60px;
-      font-size: 18px;
-      color: #c00;
-    }
+    #loading { text-align: center; padding: 80px; font-size: 20px; color: #888; }
+    #error-msg { display: none; text-align: center; padding: 60px; font-size: 18px; color: #c00; }
 
-    #cards {
-      display: none;
-      padding: 16px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
+    /* Cards */
+    #cards { display: none; padding: 16px; max-width: 900px; margin: 0 auto; }
     .card {
       background: #fff;
       border-radius: 10px;
@@ -84,7 +90,7 @@
       gap: 12px;
       flex-wrap: wrap;
     }
-    .card-name { font-size: 22px; font-weight: 700; letter-spacing: 0.05em; }
+    .card-name { font-size: 22px; font-weight: 700; }
     .card-date { font-size: 13px; color: #aaa; }
     .card-body {
       padding: 14px 18px;
@@ -93,13 +99,12 @@
       gap: 10px 20px;
     }
     .field { display: flex; flex-direction: column; gap: 2px; }
-    .field-label { font-size: 12px; color: #999; letter-spacing: 0.05em; }
+    .field-label { font-size: 12px; color: #999; }
     .field-value { font-size: 18px; color: #111; font-weight: 500; line-height: 1.4; }
     .field-value.phone { color: #0055cc; }
     .field-value.budget { color: #b85c00; font-weight: 700; }
     .field-value.first-yes { color: #1a7a1a; font-weight: 700; }
     .field-value.empty { color: #ccc; font-weight: 400; font-size: 15px; }
-
     .card-footer {
       background: #fafafa;
       border-top: 1px solid #eee;
@@ -111,6 +116,122 @@
     .badge { font-size: 14px; background: #f0f0f0; border-radius: 20px; padding: 4px 14px; color: #444; }
     .badge.purpose { background: #e8f0ff; color: #1a3a8a; }
     .badge.project { background: #fff3e0; color: #7a3a00; }
+
+    /* Analysis */
+    #analysis { display: none; padding: 16px; max-width: 960px; margin: 0 auto; }
+    .analysis-toolbar {
+      background: #fff;
+      padding: 14px 20px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+    .analysis-toolbar label { font-size: 16px; font-weight: 600; }
+    .analysis-toolbar select {
+      font-size: 16px;
+      padding: 8px 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    #analysis-total { font-size: 15px; color: #555; margin-left: auto; }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 640px) { .charts-grid { grid-template-columns: 1fr; } }
+
+    .chart-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      padding: 18px 20px;
+    }
+    .chart-card.full { grid-column: 1 / -1; }
+    .chart-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #555;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    /* Bar chart */
+    .bar-list { display: flex; flex-direction: column; gap: 8px; }
+    .bar-row { display: flex; align-items: center; gap: 10px; }
+    .bar-label {
+      width: 130px;
+      font-size: 14px;
+      color: #333;
+      flex-shrink: 0;
+      line-height: 1.3;
+    }
+    .bar-track {
+      flex: 1;
+      background: #f0f0f0;
+      border-radius: 4px;
+      height: 28px;
+      position: relative;
+      overflow: visible;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: #1a1a1a;
+      min-width: 4px;
+      transition: width 0.4s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 6px;
+    }
+    .bar-fill span {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .bar-fill.short span { color: #333; position: absolute; left: calc(100% + 6px); }
+    .bar-count {
+      font-size: 14px;
+      font-weight: 700;
+      color: #333;
+      width: 40px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* Donut-style split for 首購/換購 */
+    .split-row {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 48px;
+      margin-bottom: 12px;
+    }
+    .split-seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      transition: width 0.4s ease;
+    }
+    .split-legend {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+    .legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -123,7 +244,13 @@
   </div>
 </header>
 
-<div class="toolbar">
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('list')">名單</button>
+  <button class="tab-btn" onclick="switchTab('analysis')">分析</button>
+</div>
+
+<!-- 名單工具列 -->
+<div class="toolbar" id="list-toolbar">
   <input type="text" id="search" placeholder="搜尋姓名 / 電話 / LINE…" oninput="filterCards()"/>
   <span id="total-count"></span>
 </div>
@@ -132,12 +259,50 @@
 <div id="error-msg">⚠ 資料載入失敗，請稍後再試。</div>
 <div id="cards"></div>
 
+<!-- 分析頁 -->
+<div id="analysis">
+  <div class="analysis-toolbar">
+    <label>月份</label>
+    <select id="month-select" onchange="renderAnalysis()">
+      <option value="">全部</option>
+    </select>
+    <span id="analysis-total"></span>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">首購 vs 換購</div>
+      <div id="chart-first"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">購屋預算</div>
+      <div class="bar-list" id="chart-budget"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">年齡分布</div>
+      <div class="bar-list" id="chart-age"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">居住地區</div>
+      <div class="bar-list" id="chart-city"></div>
+    </div>
+    <div class="chart-card full">
+      <div class="chart-title">職業分布</div>
+      <div class="bar-list" id="chart-occupation"></div>
+    </div>
+    <div class="chart-card full">
+      <div class="chart-title">想看房型</div>
+      <div class="bar-list" id="chart-housing"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSb7uMvcrJNTtDAdwhMFylZK07yr2pSP3qH9zC7Rou9yHLOf9sGz6-O0bkb5p5PULlG_eC8gPubVk_M/pub?output=csv';
 
 let allData = [];
+let currentTab = 'list';
 
-// 解析 CSV（處理欄位內含逗號、換行的情況）
+// ── CSV Parser ──────────────────────────────────────────────
 function parseCSV(text) {
   const rows = [];
   let row = [], field = '', inQuote = false;
@@ -169,33 +334,48 @@ function csvToObjects(rows) {
 }
 
 function mapRow(obj) {
+  const city = obj['請問您居住的縣市'] || '';
+  const tp   = obj['台北市哪一區?'] || obj['台北市哪一區'] || '';
+  const nt   = obj['新北市哪一區?'] || obj['新北市哪一區'] || '';
+  let location = city;
+  if (tp) location = `台北市 ${tp}`;
+  else if (nt) location = `新北市 ${nt}`;
   return {
-    date:               obj['填答時間'] || '',
-    name:               obj['貴賓姓名'] || '',
-    age:                obj['請問您的年齡:'] || obj['請問您的年齡'] || '',
-    city:               obj['請問您居住的縣市'] || '',
-    taipei_district:    obj['台北市哪一區?'] || obj['台北市哪一區'] || '',
-    newtaipei_district: obj['新北市哪一區?'] || obj['新北市哪一區'] || '',
-    occupation:         obj['請問您的職業'] || '',
-    phone:              obj['聯繫電話'] || '',
-    line_id:            obj['LINE ID'] || '',
-    project:            obj['預約賞屋建案'] || '',
-    housing_type:       obj['想要看的房型'] || '',
-    budget:             obj['購屋的預算範圍'] || '',
-    first_buyer:        obj['是否為首次購屋'] || '',
-    purpose:            obj['本次購屋的用途'] || '',
+    date:         obj['填答時間'] || '',
+    name:         obj['貴賓姓名'] || '',
+    age:          obj['請問您的年齡:'] || obj['請問您的年齡'] || '',
+    city,
+    taipei_district:    tp,
+    newtaipei_district: nt,
+    location,
+    occupation:   obj['請問您的職業'] || '',
+    phone:        obj['聯繫電話'] || '',
+    line_id:      obj['LINE ID'] || '',
+    project:      obj['預約賞屋建案'] || '',
+    housing_type: obj['想要看的房型'] || '',
+    budget:       obj['購屋的預算範圍'] || '',
+    first_buyer:  obj['是否為首次購屋'] || '',
+    purpose:      obj['本次購屋的用途'] || '',
+    month:        (obj['填答時間'] || '').slice(0, 7),
   };
 }
 
+// ── Tabs ────────────────────────────────────────────────────
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && tab === 'list') || (i === 1 && tab === 'analysis'));
+  });
+  document.getElementById('list-toolbar').style.display  = tab === 'list' ? '' : 'none';
+  document.getElementById('cards').style.display         = tab === 'list' ? 'block' : 'none';
+  document.getElementById('analysis').style.display      = tab === 'analysis' ? 'block' : 'none';
+  if (tab === 'analysis') renderAnalysis();
+}
+
+// ── Name List ───────────────────────────────────────────────
 function val(v, cls) {
   if (!v) return `<span class="field-value empty">—</span>`;
   return `<span class="field-value ${cls||''}">${v}</span>`;
-}
-
-function district(r) {
-  if (r.taipei_district) return `台北市 ${r.taipei_district}`;
-  if (r.newtaipei_district) return `新北市 ${r.newtaipei_district}`;
-  return r.city || '';
 }
 
 function renderCard(r) {
@@ -207,78 +387,120 @@ function renderCard(r) {
       <span class="card-date">${r.date ? r.date.slice(0,16) : ''}</span>
     </div>
     <div class="card-body">
-      <div class="field">
-        <span class="field-label">電話</span>
-        ${val(r.phone, 'phone')}
-      </div>
-      <div class="field">
-        <span class="field-label">LINE ID</span>
-        ${val(r.line_id)}
-      </div>
-      <div class="field">
-        <span class="field-label">年齡</span>
-        ${val(r.age)}
-      </div>
-      <div class="field">
-        <span class="field-label">居住地區</span>
-        ${val(district(r))}
-      </div>
-      <div class="field">
-        <span class="field-label">職業</span>
-        ${val(r.occupation)}
-      </div>
-      <div class="field">
-        <span class="field-label">購屋預算</span>
-        ${val(r.budget, 'budget')}
-      </div>
-      <div class="field">
-        <span class="field-label">首購</span>
-        <span class="field-value ${isFirst ? 'first-yes' : ''}">${r.first_buyer || '—'}</span>
-      </div>
-      <div class="field">
-        <span class="field-label">想看房型</span>
-        ${val(r.housing_type)}
-      </div>
+      <div class="field"><span class="field-label">電話</span>${val(r.phone,'phone')}</div>
+      <div class="field"><span class="field-label">LINE ID</span>${val(r.line_id)}</div>
+      <div class="field"><span class="field-label">年齡</span>${val(r.age)}</div>
+      <div class="field"><span class="field-label">居住地區</span>${val(r.location)}</div>
+      <div class="field"><span class="field-label">職業</span>${val(r.occupation)}</div>
+      <div class="field"><span class="field-label">購屋預算</span>${val(r.budget,'budget')}</div>
+      <div class="field"><span class="field-label">首購</span><span class="field-value ${isFirst?'first-yes':''}">${r.first_buyer||'—'}</span></div>
+      <div class="field"><span class="field-label">想看房型</span>${val(r.housing_type)}</div>
     </div>
     <div class="card-footer">
-      <span class="badge project">🏠 ${r.project || '—'}</span>
-      <span class="badge purpose">${r.purpose || '—'}</span>
+      <span class="badge project">🏠 ${r.project||'—'}</span>
+      <span class="badge purpose">${r.purpose||'—'}</span>
     </div>
   </div>`;
 }
 
 function filterCards() {
   const q = document.getElementById('search').value.trim().toLowerCase();
-  const rows = q
-    ? allData.filter(r =>
-        (r.name || '').toLowerCase().includes(q) ||
-        (r.phone || '').includes(q) ||
-        (r.line_id || '').toLowerCase().includes(q) ||
-        (r.city || '').includes(q) ||
-        (r.project || '').includes(q)
-      )
-    : allData;
+  const rows = q ? allData.filter(r =>
+    (r.name||'').toLowerCase().includes(q) ||
+    (r.phone||'').includes(q) ||
+    (r.line_id||'').toLowerCase().includes(q) ||
+    (r.location||'').includes(q)
+  ) : allData;
   document.getElementById('cards').innerHTML = rows.map(renderCard).join('');
   document.getElementById('shown-count').textContent = rows.length;
   document.getElementById('total-count').textContent = `顯示 ${rows.length} / ${allData.length} 筆`;
 }
 
+// ── Analysis ────────────────────────────────────────────────
+function count(data, key) {
+  const map = {};
+  data.forEach(r => {
+    const v = r[key] || '未填';
+    map[v] = (map[v] || 0) + 1;
+  });
+  return Object.entries(map).sort((a, b) => b[1] - a[1]);
+}
+
+function barHTML(entries, total) {
+  return entries.map(([label, n]) => {
+    const pct = total ? Math.round(n / total * 100) : 0;
+    const w = pct;
+    const short = w < 18;
+    return `
+    <div class="bar-row">
+      <div class="bar-label">${label}</div>
+      <div class="bar-track">
+        <div class="bar-fill${short?' short':''}" style="width:${Math.max(w,2)}%">
+          ${!short ? `<span>${pct}%</span>` : `<span style="color:#333;position:absolute;left:calc(${Math.max(w,2)}% + 6px)">${pct}%</span>`}
+        </div>
+      </div>
+      <div class="bar-count">${n}</div>
+    </div>`;
+  }).join('');
+}
+
+function firstBuyerHTML(data) {
+  const yes = data.filter(r => r.first_buyer === '是').length;
+  const no  = data.length - yes;
+  const total = data.length || 1;
+  const yPct = Math.round(yes / total * 100);
+  const nPct = 100 - yPct;
+  return `
+    <div class="split-row">
+      <div class="split-seg" style="width:${yPct}%;background:#1a7a1a">${yPct}% 首購</div>
+      <div class="split-seg" style="width:${nPct}%;background:#555">${nPct}% 換購</div>
+    </div>
+    <div class="split-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#1a7a1a"></div>首購 ${yes} 人</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#555"></div>換購/投資 ${no} 人</div>
+    </div>`;
+}
+
+function renderAnalysis() {
+  const month = document.getElementById('month-select').value;
+  const data  = month ? allData.filter(r => r.month === month) : allData;
+  const total = data.length;
+
+  document.getElementById('analysis-total').textContent = `共 ${total} 筆`;
+
+  document.getElementById('chart-first').innerHTML      = firstBuyerHTML(data);
+  document.getElementById('chart-budget').innerHTML     = barHTML(count(data,'budget'), total);
+  document.getElementById('chart-age').innerHTML        = barHTML(count(data,'age'), total);
+  document.getElementById('chart-city').innerHTML       = barHTML(count(data,'location'), total);
+  document.getElementById('chart-occupation').innerHTML = barHTML(count(data,'occupation'), total);
+  document.getElementById('chart-housing').innerHTML    = barHTML(count(data,'housing_type'), total);
+}
+
+function populateMonths() {
+  const months = [...new Set(allData.map(r => r.month).filter(Boolean))].sort().reverse();
+  const sel = document.getElementById('month-select');
+  sel.innerHTML = '<option value="">全部</option>' +
+    months.map(m => `<option value="${m}">${m}</option>`).join('');
+}
+
+// ── Load ────────────────────────────────────────────────────
 async function loadData() {
   try {
     const res = await fetch(SHEET_URL + '&t=' + Date.now());
-    if (!res.ok) throw new Error('fetch failed');
+    if (!res.ok) throw new Error();
     const text = await res.text();
-    const rows = parseCSV(text);
-    const objs = csvToObjects(rows);
-    allData = objs.map(mapRow)
-      .filter(r => r.name)
-      .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    const objs = csvToObjects(parseCSV(text));
+    allData = objs.map(mapRow).filter(r => r.name)
+      .sort((a, b) => (b.date||'').localeCompare(a.date||''));
 
     document.getElementById('loading').style.display = 'none';
-    document.getElementById('cards').style.display = 'block';
+    document.getElementById('cards').style.display   = 'block';
     document.getElementById('last-update').textContent = new Date().toLocaleString('zh-TW');
+
+    populateMonths();
     filterCards();
-  } catch (e) {
+    if (currentTab === 'analysis') renderAnalysis();
+  } catch(e) {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('error-msg').style.display = '';
   }
