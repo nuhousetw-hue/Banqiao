@@ -8,7 +8,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Noto Sans TC', '微軟正黑體', sans-serif;
-      background: #f5f5f5;
+      background: #f0f0f0;
       color: #1a1a1a;
       font-size: 16px;
     }
@@ -16,78 +16,35 @@
     header {
       background: #1a1a1a;
       color: #fff;
-      padding: 20px 32px;
+      padding: 18px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
     }
-    header h1 { font-size: 22px; font-weight: 600; letter-spacing: 0.1em; }
-    #meta { font-size: 14px; color: #aaa; text-align: right; line-height: 1.8; }
+    header h1 { font-size: 20px; font-weight: 600; letter-spacing: 0.08em; }
+    #meta { font-size: 13px; color: #aaa; text-align: right; line-height: 1.8; }
     #meta span { color: #f0c060; }
 
     .toolbar {
       background: #fff;
-      padding: 14px 32px;
+      padding: 12px 20px;
       border-bottom: 2px solid #ddd;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
+      flex-wrap: wrap;
     }
     .toolbar input {
-      font-size: 16px;
-      padding: 8px 14px;
+      font-size: 17px;
+      padding: 9px 14px;
       border: 1px solid #ccc;
-      border-radius: 4px;
-      width: 220px;
+      border-radius: 6px;
+      flex: 1;
+      min-width: 180px;
     }
-    .toolbar label { font-size: 15px; color: #555; }
-    #total-count {
-      margin-left: auto;
-      font-size: 16px;
-      color: #333;
-      font-weight: 600;
-    }
-
-    .table-wrap { overflow-x: auto; padding: 0 0 40px; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 1200px;
-    }
-    thead th {
-      background: #2c2c2c;
-      color: #f0c060;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      padding: 14px 16px;
-      text-align: left;
-      white-space: nowrap;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    tbody tr {
-      border-bottom: 1px solid #e8e8e8;
-      background: #fff;
-      transition: background 0.15s;
-    }
-    tbody tr:nth-child(even) { background: #fafafa; }
-    tbody tr:hover { background: #fff8e8; }
-    tbody td {
-      font-size: 16px;
-      padding: 14px 16px;
-      vertical-align: middle;
-      line-height: 1.5;
-    }
-    td.name { font-size: 18px; font-weight: 600; color: #111; }
-    td.phone { font-size: 16px; color: #0055cc; font-weight: 500; }
-    td.date { font-size: 14px; color: #777; white-space: nowrap; }
-    td.budget { font-weight: 600; color: #b85c00; }
-    td.first-yes { color: #1a7a1a; font-weight: 600; }
-    td.first-no { color: #777; }
-    td.empty { color: #ccc; }
+    #total-count { font-size: 15px; color: #555; white-space: nowrap; }
 
     #loading {
       text-align: center;
@@ -102,6 +59,81 @@
       font-size: 18px;
       color: #c00;
     }
+
+    /* Cards */
+    #cards {
+      display: none;
+      padding: 16px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .card-header {
+      background: #1a1a1a;
+      color: #fff;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .card-name {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .card-date {
+      font-size: 13px;
+      color: #aaa;
+    }
+    .card-body {
+      padding: 14px 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+    }
+    .field { display: flex; flex-direction: column; gap: 2px; }
+    .field-label {
+      font-size: 12px;
+      color: #999;
+      letter-spacing: 0.05em;
+    }
+    .field-value {
+      font-size: 18px;
+      color: #111;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .field-value.phone { color: #0055cc; }
+    .field-value.budget { color: #b85c00; font-weight: 700; }
+    .field-value.first-yes { color: #1a7a1a; font-weight: 700; }
+    .field-value.empty { color: #ccc; font-weight: 400; font-size: 15px; }
+
+    .card-footer {
+      background: #fafafa;
+      border-top: 1px solid #eee;
+      padding: 10px 18px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      font-size: 14px;
+      background: #f0f0f0;
+      border-radius: 20px;
+      padding: 4px 14px;
+      color: #444;
+    }
+    .badge.purpose { background: #e8f0ff; color: #1a3a8a; }
+    .badge.project { background: #fff3e0; color: #7a3a00; }
   </style>
 </head>
 <body>
@@ -109,73 +141,85 @@
 <header>
   <h1>板橋案｜賞屋預約名單</h1>
   <div id="meta">
-    共 <span id="shown-count">—</span> 筆 &nbsp;｜&nbsp;
-    最後更新：<span id="last-update">載入中…</span><br>
+    共 <span id="shown-count">—</span> 筆　最後更新：<span id="last-update">載入中…</span><br>
     <small>每 10 分鐘自動更新</small>
   </div>
 </header>
 
 <div class="toolbar">
-  <label>搜尋</label>
-  <input type="text" id="search" placeholder="姓名 / 電話 / LINE…" oninput="filterTable()"/>
+  <input type="text" id="search" placeholder="搜尋姓名 / 電話 / LINE…" oninput="filterCards()"/>
   <span id="total-count"></span>
 </div>
 
 <div id="loading">資料載入中…</div>
 <div id="error-msg">⚠ 資料載入失敗，請確認 data.json 是否存在。</div>
-
-<div class="table-wrap" id="table-area" style="display:none">
-  <table>
-    <thead>
-      <tr>
-        <th>填單日期</th>
-        <th>姓名</th>
-        <th>年齡</th>
-        <th>居住縣市</th>
-        <th>台北市區</th>
-        <th>新北市區</th>
-        <th>職業</th>
-        <th>電話</th>
-        <th>LINE ID</th>
-        <th>預約建案</th>
-        <th>想看房型</th>
-        <th>購屋預算</th>
-        <th>首購</th>
-        <th>購屋用途</th>
-      </tr>
-    </thead>
-    <tbody id="tbody"></tbody>
-  </table>
-</div>
+<div id="cards"></div>
 
 <script>
 let allData = [];
 
-function fmt(v) {
-  return (v === undefined || v === null || v === '') ? '<span class="empty">—</span>' : v;
+function val(v, cls) {
+  if (!v) return `<span class="field-value empty">—</span>`;
+  return `<span class="field-value ${cls||''}">${v}</span>`;
 }
 
-function renderRow(r) {
+function district(r) {
+  if (r.taipei_district) return `台北市 ${r.taipei_district}`;
+  if (r.newtaipei_district) return `新北市 ${r.newtaipei_district}`;
+  return r.city || '';
+}
+
+function renderCard(r) {
   const isFirst = r.first_buyer === '是';
-  return `<tr>
-    <td class="date">${fmt(r.date ? r.date.slice(0, 16) : '')}</td>
-    <td class="name">${fmt(r.name)}</td>
-    <td>${fmt(r.age)}</td>
-    <td>${fmt(r.city)}</td>
-    <td>${fmt(r.taipei_district)}</td>
-    <td>${fmt(r.newtaipei_district)}</td>
-    <td>${fmt(r.occupation)}</td>
-    <td class="phone">${fmt(r.phone)}</td>
-    <td>${fmt(r.line_id)}</td>
-    <td>${fmt(r.project)}</td>
-    <td>${fmt(r.housing_type)}</td>
-    <td class="budget">${fmt(r.budget)}</td>
-    <td class="${isFirst ? 'first-yes' : 'first-no'}">${fmt(r.first_buyer)}</td>
-    <td>${fmt(r.purpose)}</td>
-  </tr>`;
+  const loc = district(r);
+  return `
+  <div class="card">
+    <div class="card-header">
+      <span class="card-name">${r.name || '—'}</span>
+      <span class="card-date">${r.date ? r.date.slice(0,16) : ''}</span>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <span class="field-label">電話</span>
+        ${val(r.phone, 'phone')}
+      </div>
+      <div class="field">
+        <span class="field-label">LINE ID</span>
+        ${val(r.line_id)}
+      </div>
+      <div class="field">
+        <span class="field-label">年齡</span>
+        ${val(r.age)}
+      </div>
+      <div class="field">
+        <span class="field-label">居住地區</span>
+        ${val(loc)}
+      </div>
+      <div class="field">
+        <span class="field-label">職業</span>
+        ${val(r.occupation)}
+      </div>
+      <div class="field">
+        <span class="field-label">購屋預算</span>
+        ${val(r.budget, 'budget')}
+      </div>
+      <div class="field">
+        <span class="field-label">首購</span>
+        <span class="field-value ${isFirst ? 'first-yes' : ''}">${r.first_buyer || '—'}</span>
+      </div>
+      <div class="field">
+        <span class="field-label">想看房型</span>
+        ${val(r.housing_type)}
+      </div>
+    </div>
+    <div class="card-footer">
+      <span class="badge project">🏠 ${r.project || '—'}</span>
+      <span class="badge purpose">${r.purpose || '—'}</span>
+    </div>
+  </div>`;
 }
 
-function filterTable() {
+function filterCards() {
   const q = document.getElementById('search').value.trim().toLowerCase();
   const rows = q
     ? allData.filter(r =>
@@ -186,7 +230,7 @@ function filterTable() {
         (r.project || '').includes(q)
       )
     : allData;
-  document.getElementById('tbody').innerHTML = rows.map(renderRow).join('');
+  document.getElementById('cards').innerHTML = rows.map(renderCard).join('');
   document.getElementById('shown-count').textContent = rows.length;
   document.getElementById('total-count').textContent = `顯示 ${rows.length} / ${allData.length} 筆`;
 }
@@ -196,14 +240,11 @@ async function loadData() {
     const res = await fetch('data.json?t=' + Date.now());
     if (!res.ok) throw new Error('fetch failed');
     const json = await res.json();
-
-    // Sort newest first
     allData = json.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-
     document.getElementById('loading').style.display = 'none';
-    document.getElementById('table-area').style.display = '';
+    document.getElementById('cards').style.display = '';
     document.getElementById('last-update').textContent = new Date().toLocaleString('zh-TW');
-    filterTable();
+    filterCards();
   } catch (e) {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('error-msg').style.display = '';
@@ -211,7 +252,6 @@ async function loadData() {
 }
 
 loadData();
-// Auto-refresh every 10 minutes
 setInterval(loadData, 10 * 60 * 1000);
 </script>
 </body>
