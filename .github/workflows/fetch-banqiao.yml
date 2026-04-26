@@ -1,0 +1,42 @@
+name: 板橋案｜更新預約資料
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # 每 10 分鐘執行一次
+  workflow_dispatch:          # 可手動觸發
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch SurveyCake data
+        env:
+          SURVEYCAKE_API_KEY: ${{ secrets.SURVEYCAKE_API_KEY }}
+        run: python Banqiao/fetch_data.py --out data.json
+
+      - name: Copy to Banqiao folder
+        run: cp Banqiao/data.json Banqiao/data.json || true
+
+      - name: Commit & push if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Banqiao/data.json
+          git diff --cached --quiet && echo "no changes" || (
+            git commit -m "chore: update Banqiao data $(date '+%Y-%m-%d %H:%M')"
+            git push
+          )

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>板橋案｜賞屋預約名單</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans TC', '微軟正黑體', sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      font-size: 16px;
+    }
+
+    header {
+      background: #1a1a1a;
+      color: #fff;
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 { font-size: 22px; font-weight: 600; letter-spacing: 0.1em; }
+    #meta { font-size: 14px; color: #aaa; text-align: right; line-height: 1.8; }
+    #meta span { color: #f0c060; }
+
+    .toolbar {
+      background: #fff;
+      padding: 14px 32px;
+      border-bottom: 2px solid #ddd;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .toolbar input {
+      font-size: 16px;
+      padding: 8px 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 220px;
+    }
+    .toolbar label { font-size: 15px; color: #555; }
+    #total-count {
+      margin-left: auto;
+      font-size: 16px;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .table-wrap { overflow-x: auto; padding: 0 0 40px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1200px;
+    }
+    thead th {
+      background: #2c2c2c;
+      color: #f0c060;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      padding: 14px 16px;
+      text-align: left;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    tbody tr {
+      border-bottom: 1px solid #e8e8e8;
+      background: #fff;
+      transition: background 0.15s;
+    }
+    tbody tr:nth-child(even) { background: #fafafa; }
+    tbody tr:hover { background: #fff8e8; }
+    tbody td {
+      font-size: 16px;
+      padding: 14px 16px;
+      vertical-align: middle;
+      line-height: 1.5;
+    }
+    td.name { font-size: 18px; font-weight: 600; color: #111; }
+    td.phone { font-size: 16px; color: #0055cc; font-weight: 500; }
+    td.date { font-size: 14px; color: #777; white-space: nowrap; }
+    td.budget { font-weight: 600; color: #b85c00; }
+    td.first-yes { color: #1a7a1a; font-weight: 600; }
+    td.first-no { color: #777; }
+    td.empty { color: #ccc; }
+
+    #loading {
+      text-align: center;
+      padding: 80px;
+      font-size: 20px;
+      color: #888;
+    }
+    #error-msg {
+      display: none;
+      text-align: center;
+      padding: 60px;
+      font-size: 18px;
+      color: #c00;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>板橋案｜賞屋預約名單</h1>
+  <div id="meta">
+    共 <span id="shown-count">—</span> 筆 &nbsp;｜&nbsp;
+    最後更新：<span id="last-update">載入中…</span><br>
+    <small>每 10 分鐘自動更新</small>
+  </div>
+</header>
+
+<div class="toolbar">
+  <label>搜尋</label>
+  <input type="text" id="search" placeholder="姓名 / 電話 / LINE…" oninput="filterTable()"/>
+  <span id="total-count"></span>
+</div>
+
+<div id="loading">資料載入中…</div>
+<div id="error-msg">⚠ 資料載入失敗，請確認 data.json 是否存在。</div>
+
+<div class="table-wrap" id="table-area" style="display:none">
+  <table>
+    <thead>
+      <tr>
+        <th>填單日期</th>
+        <th>姓名</th>
+        <th>年齡</th>
+        <th>居住縣市</th>
+        <th>台北市區</th>
+        <th>新北市區</th>
+        <th>職業</th>
+        <th>電話</th>
+        <th>LINE ID</th>
+        <th>預約建案</th>
+        <th>想看房型</th>
+        <th>購屋預算</th>
+        <th>首購</th>
+        <th>購屋用途</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<script>
+let allData = [];
+
+function fmt(v) {
+  return (v === undefined || v === null || v === '') ? '<span class="empty">—</span>' : v;
+}
+
+function renderRow(r) {
+  const isFirst = r.first_buyer === '是';
+  return `<tr>
+    <td class="date">${fmt(r.date ? r.date.slice(0, 16) : '')}</td>
+    <td class="name">${fmt(r.name)}</td>
+    <td>${fmt(r.age)}</td>
+    <td>${fmt(r.city)}</td>
+    <td>${fmt(r.taipei_district)}</td>
+    <td>${fmt(r.newtaipei_district)}</td>
+    <td>${fmt(r.occupation)}</td>
+    <td class="phone">${fmt(r.phone)}</td>
+    <td>${fmt(r.line_id)}</td>
+    <td>${fmt(r.project)}</td>
+    <td>${fmt(r.housing_type)}</td>
+    <td class="budget">${fmt(r.budget)}</td>
+    <td class="${isFirst ? 'first-yes' : 'first-no'}">${fmt(r.first_buyer)}</td>
+    <td>${fmt(r.purpose)}</td>
+  </tr>`;
+}
+
+function filterTable() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const rows = q
+    ? allData.filter(r =>
+        (r.name || '').toLowerCase().includes(q) ||
+        (r.phone || '').includes(q) ||
+        (r.line_id || '').toLowerCase().includes(q) ||
+        (r.city || '').includes(q) ||
+        (r.project || '').includes(q)
+      )
+    : allData;
+  document.getElementById('tbody').innerHTML = rows.map(renderRow).join('');
+  document.getElementById('shown-count').textContent = rows.length;
+  document.getElementById('total-count').textContent = `顯示 ${rows.length} / ${allData.length} 筆`;
+}
+
+async function loadData() {
+  try {
+    const res = await fetch('data.json?t=' + Date.now());
+    if (!res.ok) throw new Error('fetch failed');
+    const json = await res.json();
+
+    // Sort newest first
+    allData = json.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('table-area').style.display = '';
+    document.getElementById('last-update').textContent = new Date().toLocaleString('zh-TW');
+    filterTable();
+  } catch (e) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error-msg').style.display = '';
+  }
+}
+
+loadData();
+// Auto-refresh every 10 minutes
+setInterval(loadData, 10 * 60 * 1000);
+</script>
+</body>
+</html>
